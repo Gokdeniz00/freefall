@@ -34,9 +34,9 @@ public class FallingBall extends JPanel{
                         velocity=630-(pos_y);
                         pos_y+=velocity;
                         stopped=true;
-                        timer[0].stop();
-                        repaint();
                         
+                        repaint();
+                        timer[0].stop();
                     }
                 }
         };
