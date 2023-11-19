@@ -3,6 +3,9 @@ package com.freefall;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 //import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -12,28 +15,39 @@ public class FallingBall extends JPanel{
     int pos_y;
     int velocity;
     int acceleration;
-    int updateinterval;
+    boolean stopped;
 
     public FallingBall(){
         pos_x=0;
         pos_y=0;
         velocity=0;
         acceleration=98;
-        updateinterval=1/acceleration*1000;
+        stopped=false;
+        final Timer[] timer = new Timer[1]; 
+        ActionListener action = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if ((velocity+1<630-pos_y)&&stopped==false){           
+                        velocity+=1;
+                        pos_y+=velocity;//Increase the vertical velocity of the ball
+                        repaint();// Redraw the ball at the new position
+                    }if((velocity+1>630-pos_y)&&stopped==false){
+                        velocity=630-(pos_y);
+                        pos_y+=velocity;
+                        stopped=true;
+                        timer[0].stop();
+                        repaint();
+                        
+                    }
+                }
+        };
+        timer[0] = new Timer(1, action);
+        timer[0].start();
         
     }
-    public void Fall() {
-        Timer timer = new Timer(updateinterval, e -> {
-            pos_y += 1/velocity;// Increase the vertical position of the ball
-            velocity+=1/acceleration;//Increase the vertical velocity of the ball
-             
-            repaint(); // Redraw the ball at the new position
-        });
-        timer.start();
-    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.RED);
-        g.fillOval(100, pos_y, 50, 50); // Draw the ball
+        g.fillOval(150, pos_y, 10, 10); // Draw the ball
     }
 }
